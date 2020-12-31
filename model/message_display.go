@@ -18,7 +18,7 @@ func NewMessageDisplayModel(bucketSize int) *MessageDisplayModel  {
 	}
 }
 
-func (m *MessageDisplayModel) FlushData()  {
+func (m *MessageDisplayModel) FlushData() error {
 
 }
 
@@ -32,6 +32,5 @@ func (m *MessageDisplayModel) ProcessData(data string) error  {
 	if len(m.MessageBucket) < m.BucketSize{
 		return nil
 	}
-
-
+	return m.FlushData()
 }

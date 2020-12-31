@@ -7,19 +7,19 @@ import (
 )
 
 type MessageReceiveWorkerPool struct {
-	messageDisplayModel *model.MessageDisplayModel
 }
 
 func (p *MessageReceiveWorkerPool) DispatchWorker(id int, receiveChan <-chan string, routineWait *sync.WaitGroup)  {
 	defer routineWait.Done()
-
+	messageDisplayModel := model.MessageDisplayModel{}
 	for{
-		select {
-		case data, ok := <- receiveChan:
-			if !ok{
-				fmt.Println("error when receiving message")
-			}
-
+		data, ok := <- receiveChan
+		if !ok{
+			fmt.Printf("message receive worker[%d] error when receiving message\n", id)
+		}
+		err := messageDisplayModel.ProcessData(data)
+		if err != nil{
+			fmt.Printf("message receive worker[%d] error when processing data err=[%v]", id, err)
 		}
 	}
 }
